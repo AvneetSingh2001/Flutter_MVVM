@@ -28,6 +28,26 @@ class TodoListPage extends StatelessWidget {
                         MaterialStateProperty.all(Colors.blueAccent)),
               )
             ],
+          ),
+          SizedBox(
+            height: 16,
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: 20,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: ListTile(
+                    tileColor: Colors.blueAccent,
+                    title: Text(
+                      "Dummy Text",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                );
+              },
+            ),
           )
         ],
       ),

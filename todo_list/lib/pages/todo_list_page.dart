@@ -14,7 +14,20 @@ class TodoListPage extends StatelessWidget {
     _controller.text = "";
   }
 
-  Widget _buildBuild(BuildContext context) {
+  Widget _buildList(QuerySnapshot snapshot) {
+    return ListView.builder(
+      itemCount: snapshot.docs.length,
+      itemBuilder: (context, index) {
+        final doc = snapshot.docs[index];
+        final map = doc.data();
+        return ListTile(
+          title: Text(map["title"]),
+        );
+      },
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -26,14 +39,14 @@ class TodoListPage extends StatelessWidget {
                 controller: _controller,
                 decoration: InputDecoration(hintText: "Enter new Task"),
               )),
-              SizedBox(
+              const SizedBox(
                 width: 20,
               ),
               TextButton(
                 onPressed: () {
                   _AddTask();
                 },
-                child: Text(
+                child: const Text(
                   "Add Task",
                   style: TextStyle(color: Colors.white),
                 ),
@@ -43,25 +56,21 @@ class TodoListPage extends StatelessWidget {
               )
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 16,
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: 20,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: ListTile(
-                    tileColor: Colors.blueAccent,
-                    title: Text(
-                      "Dummy Text",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
+          StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance.collection("todos").snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData)
+                return Expanded(
+                  child: LinearProgressIndicator(),
                 );
-              },
-            ),
+              else
+                return Expanded(
+                  child: _buildList(snapshot.data),
+                );
+            },
           )
         ],
       ),
@@ -74,7 +83,7 @@ class TodoListPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Tasks"),
       ),
-      body: _buildBuild(context),
+      body: _buildBody(context),
     );
   }
 }

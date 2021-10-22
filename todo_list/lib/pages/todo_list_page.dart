@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TodoListPage extends StatelessWidget {
-  const TodoListPage({Key? key}) : super(key: key);
+  TodoListPage({Key? key}) : super(key: key);
+
+  final TextEditingController _controller = TextEditingController();
+
+  void _AddTask() {
+    FirebaseFirestore.instance
+        .collection("todos")
+        .add({"title": _controller.text});
+
+    _controller.text = "";
+  }
 
   Widget _buildBuild(BuildContext context) {
     return Padding(
@@ -12,13 +23,16 @@ class TodoListPage extends StatelessWidget {
             children: [
               Expanded(
                   child: TextField(
+                controller: _controller,
                 decoration: InputDecoration(hintText: "Enter new Task"),
               )),
               SizedBox(
                 width: 20,
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  _AddTask();
+                },
                 child: Text(
                   "Add Task",
                   style: TextStyle(color: Colors.white),

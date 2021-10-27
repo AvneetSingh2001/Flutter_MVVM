@@ -14,14 +14,19 @@ class TodoListPage extends StatelessWidget {
     _controller.text = "";
   }
 
-  Widget _buildList(QuerySnapshot snapshot) {
+  Widget _buildList(QuerySnapshot? snapshot) {
     return ListView.builder(
-      itemCount: snapshot.docs.length,
+      itemCount: snapshot!.docs.length,
       itemBuilder: (context, index) {
         final doc = snapshot.docs[index];
-        final map = doc.data();
-        return ListTile(
-          title: Text(map["title"]),
+        final map = doc.data() as Map;
+
+        return Padding(
+          padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+          child: ListTile(
+            tileColor: Colors.blue,
+            title: Text(map['title']),
+          ),
         );
       },
     );

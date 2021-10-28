@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:todo_list/models/tasks.dart';
 
 class TodoListPage extends StatelessWidget {
   TodoListPage({Key? key}) : super(key: key);
@@ -19,15 +20,8 @@ class TodoListPage extends StatelessWidget {
       itemCount: snapshot!.docs.length,
       itemBuilder: (context, index) {
         final doc = snapshot.docs[index];
-        final map = doc.data() as Map;
-
-        return Padding(
-          padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
-          child: ListTile(
-            tileColor: Colors.blue,
-            title: Text(map['title']),
-          ),
-        );
+        final task = Task.fromSnapshot(doc);
+        return _buildListItem(task);
       },
     );
   }
@@ -91,4 +85,10 @@ class TodoListPage extends StatelessWidget {
       body: _buildBody(context),
     );
   }
+}
+
+Widget _buildListItem(Task task) {
+  return ListTile(
+    title: Text(task.taskId),
+  );
 }

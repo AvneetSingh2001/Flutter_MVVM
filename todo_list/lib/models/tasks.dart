@@ -7,9 +7,7 @@ class Task {
   Task(this.title, this.taskId);
 
   factory Task.fromSnapshot(DocumentSnapshot snapshot) {
-    {
-      final map = snapshot.data() as Map;
-      return Task(map["title"], snapshot.id);
-    }
+    final map = snapshot.data() as Map;
+    return Task(map["title"], snapshot.id);
   }
 }

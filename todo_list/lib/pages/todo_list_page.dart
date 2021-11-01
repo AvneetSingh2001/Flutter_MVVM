@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:todo_list/models/tasks.dart';
@@ -87,8 +88,39 @@ class TodoListPage extends StatelessWidget {
   }
 }
 
+void _deleteTask(Task task) async {
+  await FirebaseFirestore.instance
+      .collection("todos")
+      .doc(task.taskId)
+      .delete();
+}
+
 Widget _buildListItem(Task task) {
-  return ListTile(
-    title: Text(task.taskId),
+  return Padding(
+    padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+    child: Dismissible(
+      key: Key(task.taskId),
+      onDismissed: (direction) {
+        _deleteTask(task);
+      },
+      background: Container(
+        color: Colors.white,
+        child: Container(
+          padding: EdgeInsets.all(8.0),
+          alignment: Alignment.centerRight,
+          child: const Icon(
+            CupertinoIcons.delete,
+            color: Colors.red,
+          ),
+        ),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: ListTile(
+          tileColor: Colors.blue,
+          title: Text(task.title),
+        ),
+      ),
+    ),
   );
 }
